@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:8.0
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo-keyfile:/tmp/mongo-keyfile-source:ro
+    
+    # Entrypoint DENGAN Keyfile (Mode Aman :} )
+    entrypoint: ["bash", "-c", "cp /tmp/mongo-keyfile-source /data/mongo-keyfile && chmod 400 /data/mongo-keyfile && chown 999:999 /data/mongo-keyfile && exec docker-entrypoint.sh mongod --replSet rs0 --bind_ip_all --keyFile /data/mongo-keyfile"]
+    
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mongo-setup:
+    image: mongo:8.0
+    restart: "no"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    entrypoint: ["bash", "-c", "sleep 5 && mongosh --host mongo:27017 -u ${MONGO_INITDB_ROOT_USERNAME} -p ${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase admin --eval \"try { rs.status(); } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongo:27017'}]}); }\""]
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  mongo_data:
