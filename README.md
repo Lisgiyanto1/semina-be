@@ -12,7 +12,7 @@ Untuk dokumentasi yang lebih jelas dan lengkap dapat mengunjungi link dokumentas
 
 
 ## 🔗 Link Dokumentasi
-[![Semina API  UI Docs](https://img.shields.io/badge/Semina_API_|_DOCS-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://lisgiyanto1.github.io/semina-be/)
+[![Semina API  UI Docs](https://img.shields.io/badge/Semina_API_|_DOCS-blue?style=for-the-badge&logo=ko-fi&logoColor=white)](https://lisgiyanto1.github.io/semina-be/)
 
 
 
@@ -71,10 +71,14 @@ Go to the project directory
   cd semina-db
 ```
 
-Install dependencies
+Install dependencies & build
 
 ```bash
   npm install
+```
+
+```bash
+  npm build
 ```
 
 Start the server
@@ -83,6 +87,10 @@ Start the server
   npm run start
 ```
 
+Start with nodemon
+```bash
+  npm run dev
+```
 
 ## Running Tests
 
@@ -100,5 +108,5 @@ To run tests, run the following command
 
 ## Tech Stack
 
-![nodejs-typescript-express-mongodb-docker](https://www.readmecodegen.com/api/social-icon?name=nodejs%2Ctypescript%2Cexpress%2Cmongodb%2Cdocker&size=46&bg=%23000000&animation=rainbow&link=)
+![nodejs-express-mongodb-docker](https://www.readmecodegen.com/api/social-icon?name=nodejs%2Cexpress%2Cmongodb%2Cdocker&size=46&bg=%23374151&shape=circle&animation=shake&link=)
 
