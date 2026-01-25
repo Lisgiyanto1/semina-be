@@ -1,53 +1,57 @@
-// jest.mock('uuid', ()=>({
-//     v4: ()=> 'test-uuid'
-// }));
+jest.mock('uuid', () => ({
+    v4: () => 'test-uuid'
+}));
 
 
-// import express, {Express} from 'express';
-// import request from "supertest";
-// import {v4 as uuidv4} from "uuid";
-// import organizerRouter from "../../app/api/v1/organizer/route";
-// import prisma from "../../app/prisma";
+import express, { Express } from 'express';
+import request from "supertest";
+import { v4 as uuidv4 } from "uuid";
+import organizerRouter from "../../app/api/v1/organizer/route";
+import prisma from "../../app/prisma";
 
-// jest.mock('../../app/prisma', ()=>({
-//     __esModule: true,
-//     default : {
-//         organizer: {
-//             create : jest.fn()
-//         }
-//     }
-// }));
+jest.mock('../../app/prisma', () => ({
+    __esModule: true,
+    default: {
+        organizer: {
+            create: jest.fn()
+        }
+    }
+}));
 
-// describe("Organizer Controller", ()=>{
-//     let app : Express;
+describe("Organizer Controller", () => {
+    let app: Express;
 
-//     beforeAll(()=>{
-//         app = express();
-//         app.use(express.json());
+    beforeAll(() => {
+        app = express();
+        app.use(express.json());
 
-//         app.use('/organizer', organizerRouter);
-//     });
+        app.use('/organizer', organizerRouter);
+    });
 
-//     afterEach(()=>{
-//         jest.clearAllMocks();
-//     });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
-//     describe('POST /organizer - Create Organizer', ()=>{
-//         it('should create a new organizer', async()=>{
-//             const organizerId = uuidv4();
+    describe('POST /organizer - Create Organizer', () => {
+        it('should create a new organizer', async () => {
+            const organizerId = uuidv4();
 
-//             const mockOrganizer = {
-//                 id: organizerId,
-//                 name: "Group Pure Event Organizer"
-//             };
+            const mockOrganizer = {
+                id: organizerId,
+                name: "Group Pure Event Organizer"
+            };
 
-//             (prisma.organizer.create as jest.Mock).mockResolvedValue(mockOrganizer);
+            (prisma.organizer.create as jest.Mock).mockResolvedValue(mockOrganizer);
 
-//             const response = await request(app)
-//                 .post('/organizer')
-//                 .send({
-//                     name: 'Group Pure Event Organizer'
-//                 })
-//         })
-//     })
-// })
+            const response = await request(app)
+                .post('/organizer')
+                .send({
+                    name: 'Group Pure Event Organizer'
+                });
+            expect(response.status).toBe(201);
+            expect(response.body.status).toBe(true);
+            expect(response.body.data.id).toBe(organizerId);
+            expect(response.body.message).toContain('SUCCESS')
+        });
+    })
+})
