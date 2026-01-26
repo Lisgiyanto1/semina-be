@@ -8,14 +8,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-
-model Organizer  {
+model Organizer {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String
 
@@ -23,9 +21,11 @@ model Organizer  {
 }
 
 model Category {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  organizerId String @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  organizerId String    @db.ObjectId
+  
+  organizer   Organizer @relation(fields: [organizerId], references: [id])
 
-  organizer Organizer @relation(fields: [organizerId], references: [id])
+  @@index([organizerId])
 }
