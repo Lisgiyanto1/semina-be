@@ -7,6 +7,10 @@ export type CategoriesType = {
     organizer: OrganizerType;
 }
 
+export type GetCategoryRequest = {
+    id: string;
+}
+
 export type CategoriesCreateRequest = {
     name: string;
     organizerId: string;
@@ -20,7 +24,7 @@ export type CategoriesUpdateRequest = {
 export type CatgoriesResponseType = {
     status: boolean;
     message: string;
-    data?: CategoriesType;
+    data: CategoriesType;
 }
 
 export type CategoriesErrorResponse = {

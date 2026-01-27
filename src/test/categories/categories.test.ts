@@ -19,6 +19,7 @@ jest.mock('../../app/prisma', () => ({
     default: {
         category: {
             create: jest.fn(),
+            findUniqueOrThrow: jest.fn()
         },
     },
 }));
@@ -81,6 +82,49 @@ describe('Categories Controller', () => {
                 });
             expect(response.status).toBe(400);
             expect(response.body.status).toBe(false);
+        });
+    });
+
+    describe("GET /categories/:id - Get Category by ID", () => {
+        it("should find category successfully", async () => {
+            const categoryId = uuidv4();
+            const organizerId = uuidv4();
+
+            const mockCategory = {
+                id: categoryId,
+                name: "Artificial Intelligence",
+                organizerId: organizerId,
+                organizer: {
+                    id: organizerId,
+                    name: "Google Developer Group",
+                },
+            };
+
+            (prisma.category.findUniqueOrThrow as jest.Mock)
+                .mockResolvedValue(mockCategory);
+
+            const response = await request(app)
+                .get(`/categories/${categoryId}`)
+                .send();
+
+            expect(response.status).toBe(200);
+            expect(response.body.status).toBe(true);
+            expect(response.body.data.id).toBe(categoryId);
+            expect(response.body.data.organizerId).toBe(organizerId);
+            expect(response.body.message).toContain("SUCCESS");
+        });
+
+        it("should return 404 when category not found", async () => {
+            (prisma.category.findUniqueOrThrow as jest.Mock)
+                .mockRejectedValue(new Error("Record not found"));
+
+            const response = await request(app)
+                .get(`/categories/invalid-id`)
+                .send();
+
+            expect(response.status).toBe(404);
+            expect(response.body.status).toBe(false);
+            expect(response.body.message).toContain("FAILED");
         });
     });
 });

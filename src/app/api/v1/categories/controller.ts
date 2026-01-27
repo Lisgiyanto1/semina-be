@@ -21,6 +21,38 @@ class CategoriesController {
             res.status(400).json(CategoriesResponse.error("[FAILED] Failed to create category", errorMessage));
         }
     }
+
+    findByID = async (req: Request, res: Response) => {
+        try {
+            const categoryId = req.params.id;
+
+            const category = await prisma.category.findUniqueOrThrow({
+                where: {
+                    id: String(categoryId),
+                },
+                include: {
+                    organizer: true,
+                },
+            });
+
+            return res.status(200).json(
+                CategoriesResponse.success(
+                    "[SUCCESS] Find the category data.",
+                    category
+                )
+            );
+        } catch (error) {
+            const message =
+                error instanceof Error ? error.message : "Unknown error";
+
+            return res.status(404).json(
+                CategoriesResponse.error(
+                    "[FAILED] Categories Not Found",
+                    message
+                )
+            );
+        }
+    };
 }
 
 export default new CategoriesController();
