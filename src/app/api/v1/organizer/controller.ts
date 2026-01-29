@@ -24,10 +24,10 @@ class OrganizerController {
                     id: String(req.params.id)
                 }
             });
-            res.status(200).json(OrganizerResponses.success('Organizer Has Been Find Successfully', find));
+            res.status(200).json(OrganizerResponses.success('[SUCCESS] Organizer Has Been Find Successfully', find));
         } catch (error) {
             const errMessage = error instanceof Error ? error.message : 'Unknown Error';
-            res.status(404).json(OrganizerResponses.error('Organizer Not Found', errMessage));
+            res.status(404).json(OrganizerResponses.error('[FAILED] Organizer Not Found', errMessage));
         }
     }
 }

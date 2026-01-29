@@ -25,15 +25,10 @@ const router = Router();
  *             type: object
  *             required:
  *               - name
- *               - organizerId
  *             properties:
  *               name:
  *                 type: string
  *                 example: Technology
- *               organizerId:
- *                 type: string
- *                 description: Organizer ObjectId
- *                 example: "66c9e1f3b3a1c8f6c4d1a912"
  *     responses:
  *       201:
  *         description: Category created successfully
@@ -104,7 +99,7 @@ router.post("/", CategoriesController.createCategory);
 
 /**
  * @swagger
- * /categories:
+ * /categories/:id:
  *   get:
  *     summary: Get Category
  *     description: Get category by Id
@@ -117,10 +112,10 @@ router.post("/", CategoriesController.createCategory);
  *             type: object
  *             required:
  *               - id
- *                  properties:
- *                      id :
- *                        type:string
- *                        example: "66c9e1f3b3a1c8f6c4d1a999"
+ *             properties:
+*                  id:
+*                    type: string
+*                    example: "66c9e1f3b3a1c8f6c4d1a999"
  *     responses:
  *       201:
  *         description: Category has been find successfully
@@ -186,5 +181,91 @@ router.post("/", CategoriesController.createCategory);
  *                   example: "Not Found"
  */
 router.get("/:id", CategoriesController.findByID);
+
+
+/**
+ * @swagger
+ * /categories/:id:
+ *   post:
+ *     summary: Update exist category
+ *     description: Update category and link it to an organizer
+ *     tags: [Categories]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Technology
+ *     responses:
+ *       201:
+ *         description: Category update successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "[SUCCESS] Category has been updated"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "66c9e1f3b3a1c8f6c4d1a999"
+ *                     name:
+ *                       type: string
+ *                       example: Technology
+ *                     organizerId:
+ *                       type: string
+ *                       example: "66c9e1f3b3a1c8f6c4d1a912"
+ *                     organizer:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                           example: "66c9e1f3b3a1c8f6c4d1a912"
+ *                         name:
+ *                           type: string
+ *                           example: Google Developer Group
+ *                         createdAt:
+ *                           type: string
+ *                           format: date-time
+ *                         updatedAt:
+ *                           type: string
+ *                           format: date-time
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *       400:
+ *         description: Failed to update category
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "[FAILED] Failed to update category"
+ *                 errors:
+ *                   type: string
+ *                   example: Category not found"
+ */
+router.patch("/:id", CategoriesController.updateCategory);
 
 export default router;

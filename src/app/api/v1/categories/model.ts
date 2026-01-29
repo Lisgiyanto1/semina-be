@@ -4,7 +4,7 @@ export type CategoriesType = {
     id: string;
     name: string;
     organizerId: string;
-    organizer: OrganizerType;
+    organizer?: OrganizerType;
 }
 
 export type GetCategoryRequest = {

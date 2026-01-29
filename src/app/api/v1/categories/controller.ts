@@ -53,6 +53,22 @@ class CategoriesController {
             );
         }
     };
+
+    updateCategory = async (req: Request, res: Response) => {
+        try {
+            const categoryId = req.params.id;
+            const update = await prisma.category.update({
+                where: {
+                    id: String(categoryId)
+                },
+                data: req.body
+            });
+            return res.status(201).json(CategoriesResponse.success("[SUCCESS] Update Successfully", update));
+        } catch (error) {
+            const errMessage = error instanceof Error? error.message : 'Unknown';
+            res.status(404).json(CategoriesResponse.error("[FAILED] : Failed Update Data Category Id Not Found", errMessage));
+        }
+    }
 }
 
 export default new CategoriesController();

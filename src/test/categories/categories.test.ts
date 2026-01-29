@@ -19,7 +19,9 @@ jest.mock('../../app/prisma', () => ({
     default: {
         category: {
             create: jest.fn(),
-            findUniqueOrThrow: jest.fn()
+            findUniqueOrThrow: jest.fn(),
+            update: jest.fn
+
         },
     },
 }));
@@ -127,6 +129,35 @@ describe('Categories Controller', () => {
             expect(response.body.message).toContain("FAILED");
         });
     });
+
+    describe("PATCH /categories/:id - PATCH Category by ID", () => {
+        it('should be updated category successfully', async () => {
+            const categoryId = uuidv4();
+            const organizerId = uuidv4();
+            const mockCategory = {
+                id: categoryId,
+                name: "Artificial Intelligence",
+                organizerId: organizerId,
+                organizer: {
+                    id: organizerId,
+                    name: "Google Developer Group",
+                },
+            };
+            jest.spyOn(prisma.category, 'update').mockResolvedValue(mockCategory);
+            const response = await request(app)
+                .patch('/categories/:id')
+                .send({
+                    id: categoryId,
+                    name: "Art Coffee Contest",
+                    organizerId: organizerId
+                });
+
+            expect(response.status).toBe(201)
+            expect(response.body.status).toBe(true)
+            expect(response.body.data.id).toBe(categoryId)
+            expect(response.body.message).toContain("SUCCESS")
+        })
+    })
 });
 
 
