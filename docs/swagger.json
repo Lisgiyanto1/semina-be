@@ -251,7 +251,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "summary": "Update exist category",
         "description": "Update category and link it to an organizer",
         "tags": [

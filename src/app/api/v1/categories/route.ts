@@ -113,9 +113,9 @@ router.post("/", CategoriesController.createCategory);
  *             required:
  *               - id
  *             properties:
-*                  id:
-*                    type: string
-*                    example: "66c9e1f3b3a1c8f6c4d1a999"
+ *                  id:
+ *                    type: string
+ *                    example: "66c9e1f3b3a1c8f6c4d1a999"
  *     responses:
  *       201:
  *         description: Category has been find successfully
@@ -186,7 +186,7 @@ router.get("/:id", CategoriesController.findByID);
 /**
  * @swagger
  * /categories/:id:
- *   post:
+ *   patch:
  *     summary: Update exist category
  *     description: Update category and link it to an organizer
  *     tags: [Categories]
