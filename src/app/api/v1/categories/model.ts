@@ -1,27 +1,30 @@
 import { OrganizerType } from "../organizer/model";
 
-export type CategoriesType = {
+export interface CategoriesType {
     id: string;
     name: string;
     organizerId: string;
-    organizer?: OrganizerType;
+    organizer: OrganizerType;
 }
 
-export type GetCategoryRequest = {
-    id: string;
-}
+export type CategoriesCreateRequest = Omit<CategoriesType, "id" | "organizer">;
+export type CategoriesUpdateRequest = Omit<CategoriesType, "id" | "organizer">;
 
-export type CategoriesCreateRequest = {
-    name: string;
-    organizerId: string;
-}
+// export type GetCategoryRequest = {
+//     id: string;
+// }
 
-export type CategoriesUpdateRequest = {
-    name?: string;
-    organizerId?: string;
-}
+// export type CategoriesCreateRequest = {
+//     name: string;
+//     organizerId: string;
+// }
 
-export type CatgoriesResponseType = {
+// export type CategoriesUpdateRequest = {
+//     name?: string;
+//     organizerId?: string;
+// }
+
+export type CategoriesResponseType = {
     status: boolean;
     message: string;
     data: CategoriesType;
@@ -35,7 +38,7 @@ export type CategoriesErrorResponse = {
 
 
 export class CategoriesResponse {
-    static success(message: string, data: CategoriesType): CatgoriesResponseType {
+    static success(message: string, data: CategoriesType): CategoriesResponseType {
         return {
             status: true,
             message,

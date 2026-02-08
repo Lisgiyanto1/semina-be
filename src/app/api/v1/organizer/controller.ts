@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import prisma from "../../../prisma";
-import { OrganizerCreateRequest, OrganizerResponses } from "./model";
+import { OrganizerCreate, OrganizerResponses, OrganizerType } from "./model";
 
 class OrganizerController {
-    createOrganizer = async (req: Request<{}, {}, OrganizerCreateRequest>, res: Response) => {
+    createOrganizer = async (req: Request<{}, {}, Readonly<OrganizerCreate>>, res: Response) => {
         try {
             const organizer = await prisma.organizer.create({
                 data: {
@@ -17,7 +17,7 @@ class OrganizerController {
         }
     }
 
-    getOrganizerByid = async (req: Request, res: Response) => {
+    getOrganizerByid = async (req: Request<Omit<OrganizerType, "name">>, res: Response) => {
         try {
             const find = await prisma.organizer.findUniqueOrThrow({
                 where: {

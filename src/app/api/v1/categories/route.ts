@@ -6,8 +6,8 @@ const router = Router();
 /**
  * @swagger
  * tags:
- *   name: Categories
- *   description: Categories management
+ *   - name: Categories
+ *     description: Categories management
  */
 
 /**
@@ -15,7 +15,6 @@ const router = Router();
  * /categories:
  *   post:
  *     summary: Create new category
- *     description: Create a category and link it to an organizer
  *     tags: [Categories]
  *     requestBody:
  *       required: true
@@ -25,23 +24,53 @@ const router = Router();
  *             type: object
  *             required:
  *               - name
+ *               - organizerId
  *             properties:
  *               name:
  *                 type: string
  *                 example: Technology
+ *               organizerId:
+ *                 type: string
+ *                 example: 66c9e1f3b3a1c8f6c4d1a111
  *     responses:
  *       201:
  *         description: Category created successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/CategoryResponse'
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "[SUCCESS] Category created successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: 66c9e1f3b3a1c8f6c4d1a999
+ *                     name:
+ *                       type: string
+ *                       example: Technology
+ *                     organizerId:
+ *                       type: string
+ *                       example: 66c9e1f3b3a1c8f6c4d1a111
  *       400:
- *         description: Failed to create category
+ *         description: Validation error
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Validation Error"
  */
 router.post("/", CategoriesController.createCategory);
 
@@ -50,7 +79,6 @@ router.post("/", CategoriesController.createCategory);
  * /categories/{id}:
  *   get:
  *     summary: Get category by ID
- *     description: Retrieve category detail by its ID
  *     tags: [Categories]
  *     parameters:
  *       - in: path
@@ -58,20 +86,43 @@ router.post("/", CategoriesController.createCategory);
  *         required: true
  *         schema:
  *           type: string
- *         example: 66c9e1f3b3a1c8f6c4d1a999
+ *           example: 66c9e1f3b3a1c8f6c4d1a999
  *     responses:
  *       200:
- *         description: Category retrieved successfully
+ *         description: Category found
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/CategoryResponse'
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "[SUCCESS] Category found"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     organizerId:
+ *                       type: string
  *       404:
  *         description: Category not found
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Category Not Found"
  */
 router.get("/:id", CategoriesController.findByID);
 
@@ -79,8 +130,7 @@ router.get("/:id", CategoriesController.findByID);
  * @swagger
  * /categories/{id}:
  *   patch:
- *     summary: Update category
- *     description: Update existing category data
+ *     summary: Update category by ID
  *     tags: [Categories]
  *     parameters:
  *       - in: path
@@ -88,33 +138,88 @@ router.get("/:id", CategoriesController.findByID);
  *         required: true
  *         schema:
  *           type: string
- *         example: 66c9e1f3b3a1c8f6c4d1a999
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - name
  *             properties:
  *               name:
  *                 type: string
- *                 example: Technology
+ *                 example: Technology Updated
  *     responses:
  *       200:
  *         description: Category updated successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/CategoryResponse'
- *       400:
- *         description: Failed to update category
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "[SUCCESS] Category updated successfully"
+ *                 data:
+ *                   type: object
+ *       404:
+ *         description: Category not found
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Category Not Found"
  */
 router.patch("/:id", CategoriesController.updateCategory);
+
+/**
+ * @swagger
+ * /categories/{id}:
+ *   delete:
+ *     summary: Delete category by ID
+ *     tags: [Categories]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Category deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "[SUCCESS] Category deleted successfully"
+ *       404:
+ *         description: Category not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Category Not Found"
+ */
+router.delete("/:id", CategoriesController.deleteCategory);
 
 export default router;

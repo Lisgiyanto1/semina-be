@@ -15,7 +15,6 @@
     "/categories": {
       "post": {
         "summary": "Create new category",
-        "description": "Create a category and link it to an organizer",
         "tags": [
           "Categories"
         ],
@@ -26,12 +25,17 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "name"
+                  "name",
+                  "organizerId"
                 ],
                 "properties": {
                   "name": {
                     "type": "string",
                     "example": "Technology"
+                  },
+                  "organizerId": {
+                    "type": "string",
+                    "example": "66c9e1f3b3a1c8f6c4d1a111"
                   }
                 }
               }
@@ -44,17 +48,54 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CategoryResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "[SUCCESS] Category created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "66c9e1f3b3a1c8f6c4d1a999"
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "Technology"
+                        },
+                        "organizerId": {
+                          "type": "string",
+                          "example": "66c9e1f3b3a1c8f6c4d1a111"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Failed to create category",
+            "description": "Validation error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation Error"
+                    }
+                  }
                 }
               }
             }
@@ -65,7 +106,6 @@
     "/categories/{id}": {
       "get": {
         "summary": "Get category by ID",
-        "description": "Retrieve category detail by its ID",
         "tags": [
           "Categories"
         ],
@@ -75,18 +115,42 @@
             "name": "id",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "example": "66c9e1f3b3a1c8f6c4d1a999"
+              "type": "string",
+              "example": "66c9e1f3b3a1c8f6c4d1a999"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Category retrieved successfully",
+            "description": "Category found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CategoryResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "[SUCCESS] Category found"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "organizerId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -96,7 +160,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category Not Found"
+                    }
+                  }
                 }
               }
             }
@@ -104,8 +178,7 @@
         }
       },
       "patch": {
-        "summary": "Update category",
-        "description": "Update existing category data",
+        "summary": "Update category by ID",
         "tags": [
           "Categories"
         ],
@@ -116,8 +189,7 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "example": "66c9e1f3b3a1c8f6c4d1a999"
+            }
           }
         ],
         "requestBody": {
@@ -126,13 +198,10 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "name"
-                ],
                 "properties": {
                   "name": {
                     "type": "string",
-                    "example": "Technology"
+                    "example": "Technology Updated"
                   }
                 }
               }
@@ -145,17 +214,98 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CategoryResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "[SUCCESS] Category updated successfully"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
                 }
               }
             }
           },
-          "400": {
-            "description": "Failed to update category",
+          "404": {
+            "description": "Category not found",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category Not Found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete category by ID",
+        "tags": [
+          "Categories"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "[SUCCESS] Category deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category Not Found"
+                    }
+                  }
                 }
               }
             }

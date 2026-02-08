@@ -9,6 +9,7 @@ import swaggerSpec from "./app/swagger";
 
 
 import mainRouter from "./routes";
+import { errHandler } from './middleware/errorHandlerGlobal';
 
 dotenv.config();
 
@@ -25,7 +26,10 @@ app.use(
   swaggerUi.setup(swaggerSpec)
 );
 
+
 app.use(mainRouter);
+
+app.use(errHandler);
 
 app.get('/', (req: Request, res: Response) => {
     res.send("Welcome in semina server : )");

@@ -1,16 +1,8 @@
-export type OrganizerType = {
+export interface OrganizerType  {
     id: string;
     name: string;
 }
-
-export type OrganizerCreateRequest = {
-    name: string;
-}
-
-export type OrganizerUpdateRequest= {
-    id?: string;
-    name?: string;
-}
+export type OrganizerCreate = Omit<OrganizerType, "id">;
 
 export type OrganizerResponseType = {
     status: boolean,
